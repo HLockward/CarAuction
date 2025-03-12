@@ -87,6 +87,8 @@ namespace AuctionService.Controllers
             auction.Item.Mileage = auctionDto.Mileage ?? auction.Item.Mileage;
             auction.Item.Year = auctionDto.Year ?? auction.Item.Year;
 
+            await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
+
             var result = await _context.SaveChangesAsync() > 0;
 
             if (!result) return BadRequest("Problem saving changes");
@@ -103,6 +105,8 @@ namespace AuctionService.Controllers
             //TODO: check if username == seller
 
             _context.Auctions.Remove(auction);
+
+            await _publishEndpoint.Publish<AuctionDeleted>(new { Id = id.ToString() });
 
             var result = await _context.SaveChangesAsync() > 0;
 
