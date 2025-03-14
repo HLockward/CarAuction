@@ -48,6 +48,11 @@ internal static class HostingExtensions
         //     options.ClientSecret = "copy client secret from Google here";
         // });
 
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.Lax;
+        });
+
         return builder.Build();
     }
 
