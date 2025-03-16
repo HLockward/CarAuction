@@ -52,7 +52,20 @@ services:
       - 7002:80
     depends_on:
       - mongo
-      - rabbitmq 
+      - rabbitmq
+  identity-svc:
+    image: hlockward/identity-svc:latest
+    build: 
+      context: .
+      dockerfile: src/IdentityService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=identity;Username=postgres;Password=postgrespw
+    ports:
+      - 5000:80
+    depends_on:
+      - postgres   
 volumes:
   pgdata:
   mongodata:
