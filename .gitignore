@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 # is-signing-key-
 is-signing-key-*
+
+#.vscode
+.vscode/
