@@ -1,10 +1,13 @@
 using AuctionService.Controllers;
 using AuctionService.Data;
 using AuctionService.DTOs;
+using AuctionService.Entities;
 using AuctionService.RequestHelpers;
+using AuctionService.UnitTests.Utils;
 using AutoFixture;
 using AutoMapper;
 using MassTransit;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -30,7 +33,16 @@ public class AuctionControllerTests
 
         _mapper = new Mapper(mapperConfig);
         _controller = new AuctionController(_auctionRepo.Object,
-            _mapper, _publishEndpoint.Object);
+            _mapper, _publishEndpoint.Object)
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = Helpers.GetClaimsPrincipal()
+                }
+            }
+        };
     }
 
     [Fact]
@@ -76,5 +88,23 @@ public class AuctionControllerTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task CreateAuction_WithvalidAuctionDto_ReturnsCreatedAtAction()
+    {
+        // Arrange
+        var auctionDto = _fixture.Create<CreateAuctionDto>();
+        _auctionRepo.Setup(x => x.AddAuction(It.IsAny<Auction>()));
+        _auctionRepo.Setup(x => x.SaveChangesAsync()).ReturnsAsync(true);
+
+        // Act
+        var result = await _controller.CreateAuction(auctionDto);
+        var createdResult = (CreatedAtActionResult)result.Result;
+
+        // Assert
+        Assert.NotNull(createdResult);
+        Assert.Equal("GetAuctionById", createdResult.ActionName);
+        Assert.IsType<AuctionDto>(createdResult.Value);
     }
 }
