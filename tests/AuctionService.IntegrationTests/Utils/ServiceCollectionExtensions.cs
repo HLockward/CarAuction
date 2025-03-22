@@ -1,9 +1,8 @@
 using AuctionService.Data;
-using AuctionService.IntegrationTests.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AuctionService.IntegrationTests.Fixtures;
+namespace AuctionService.IntegrationTests.Utils;
 
 public static class ServiceCollectionExtensions
 {
