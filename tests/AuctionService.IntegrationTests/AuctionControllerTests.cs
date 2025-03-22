@@ -17,7 +17,6 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
     {
         _factory = factory;
         _httpClient = _factory.CreateClient();
-
     }
 
     [Fact]
@@ -76,6 +75,7 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
     {
         // Arrange
         var auction = new CreateAuctionDto { Make = "Ford" };
+
         // Act
         var response = await _httpClient.PostAsJsonAsync("api/auctions", auction);
 
@@ -101,6 +101,57 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
         Assert.Equal("bob", auctionCreated.Seller);
     }
 
+    [Fact]
+    public async Task CreateAuction_WithInvalidCreateAuctionDto_ShouldReturn400()
+    {
+        // Arrange
+        var auction = new CreateAuctionDto { Make = "Ford" };
+        _httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("bob"));
+
+        // Act
+        var response = await _httpClient.PostAsJsonAsync("api/auctions", auction);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+    }
+
+    [Fact]
+    public async Task UpdateAuction_WithValidUpdateDtoAndUser_ShouldReturn200()
+    {
+        // Arrange
+        var auction = GetUpdateAuctionDto();
+        _httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("bob"));
+
+        // Act
+        var response = await _httpClient.PutAsJsonAsync($"api/auctions/{_gt_ID}", auction);
+
+        // Assert
+        response.EnsureSuccessStatusCode();
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var auctionUpdated = await _httpClient.GetFromJsonAsync<AuctionDto>($"api/auctions/{_gt_ID}");
+        Assert.NotNull(auctionUpdated);
+        Assert.Equal(auction.Make, auctionUpdated.Make);
+        Assert.Equal(auction.Mileage, auctionUpdated.Mileage);
+        Assert.Equal(auction.Model, auctionUpdated.Model);
+        Assert.Equal(auction.Year, auctionUpdated.Year);
+        Assert.Equal(auction.Color, auctionUpdated.Color);
+    }
+
+    [Fact]
+    public async Task UpdateAuction_WithValidUpdateDtoAndInvalidUser_ShouldReturn403()
+    {
+        // Arrange 
+        var auction = GetUpdateAuctionDto();
+        _httpClient.SetFakeJwtBearerToken(AuthHelper.GetBearerForUser("alice"));
+
+        // Act
+        var response = await _httpClient.PutAsJsonAsync($"api/auctions/{_gt_ID}", auction);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
     public Task InitializeAsync() => Task.CompletedTask;
     public Task DisposeAsync()
     {
@@ -121,6 +172,18 @@ public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsync
             Mileage = 10,
             Year = 10,
             ReservePrice = 10
+        };
+    }
+
+    private UpdateAuctionDto GetUpdateAuctionDto()
+    {
+        return new UpdateAuctionDto
+        {
+            Make = "test",
+            Model = "testModel",
+            Color = "test",
+            Mileage = 10,
+            Year = 10
         };
     }
 
