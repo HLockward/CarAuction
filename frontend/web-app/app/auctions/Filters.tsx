@@ -1,14 +1,12 @@
 "use client";
+import { useParamsStore } from "@/hooks/useParamsStore";
 import { Button, ButtonGroup } from "flowbite-react";
-
-type Props = {
-  pageSize: number;
-  setPageSize: (size: number) => void;
-};
 
 const pageSizeOptions = [4, 8, 12];
 
-const Filters = ({ pageSize, setPageSize }: Props) => {
+const Filters = () => {
+  const setPageSize = useParamsStore((state) => state.setParams);
+  const pageSize = useParamsStore((state) => state.pageSize);
   return (
     <div className="flex justify-between items-center mb-4">
       <div>
@@ -17,7 +15,7 @@ const Filters = ({ pageSize, setPageSize }: Props) => {
           {pageSizeOptions.map((value, i) => (
             <Button
               key={i}
-              onClick={() => setPageSize(value)}
+              onClick={() => setPageSize({ pageSize: value })}
               color={`${pageSize === value ? "red" : "gray"}`}
               className="focus:ring-0"
             >
