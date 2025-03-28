@@ -1,11 +1,11 @@
 "use client";
 import { useParamsStore } from "@/hooks/useParamsStore";
-import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const Search = () => {
   const setParams = useParamsStore((state) => state.setParams);
-  const [value, setValue] = useState("");
+  const value = useParamsStore((state) => state.searchValue);
+  const setValue = useParamsStore((state) => state.setSearchValue);
 
   const onChange = (event: any) => setValue(event.target.value);
   const search = () => setParams({ searchTerm: value });
@@ -15,6 +15,7 @@ const Search = () => {
         onKeyDown={(e: any) => {
           if (e.key === "Enter") search();
         }}
+        value={value}
         onChange={onChange}
         type="text"
         placeholder="Search car by make, model or color"
