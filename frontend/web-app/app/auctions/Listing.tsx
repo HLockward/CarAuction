@@ -1,13 +1,13 @@
 "use client";
+import { useParamsStore } from "@/hooks/useParamsStore";
+import queryString from "query-string";
 import { useEffect, useState } from "react";
+import { useShallow } from "zustand/shallow";
 import { getData } from "../actions/auctionActions";
 import AppPagination from "../components/AppPagination";
 import { Auction, PageResult } from "../types";
 import AuctionCard from "./AuctionCard";
 import Filters from "./Filters";
-import { useParamsStore } from "@/hooks/useParamsStore";
-import { useShallow } from "zustand/shallow";
-import queryString from "query-string";
 
 const Listing = () => {
   const [data, setData] = useState<PageResult<Auction>>();
@@ -16,6 +16,8 @@ const Listing = () => {
       pageNumber: state.pageNumber,
       pageSize: state.pageSize,
       searchTerm: state.searchTerm,
+      orderBy: state.orderBy,
+      FilterBy: state.filterBy,
     }))
   );
   const setParams = useParamsStore((state) => state.setParams);
