@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { getData } from "../actions/auctionActions";
 import AppPagination from "../components/AppPagination";
+import EmptyFilter from "../components/EmptyFilter";
 import { Auction, PageResult } from "../types";
 import AuctionCard from "./AuctionCard";
 import Filters from "./Filters";
@@ -36,18 +37,24 @@ const Listing = () => {
   return (
     <>
       <Filters />
-      <div className="grid grid-cols-4 gap-6">
-        {data.result.map((auction) => (
-          <AuctionCard key={auction.id} auction={auction} />
-        ))}
-      </div>
-      <div className="flex justify-center mt-4">
-        <AppPagination
-          currentPage={params.pageNumber}
-          pageCount={data.pageCount}
-          pageChanged={setPageNumber}
-        />
-      </div>
+      {data.totalCount === 0 ? (
+        <EmptyFilter showReset />
+      ) : (
+        <>
+          <div className="grid grid-cols-4 gap-6">
+            {data.result.map((auction) => (
+              <AuctionCard key={auction.id} auction={auction} />
+            ))}
+          </div>
+          <div className="flex justify-center mt-4">
+            <AppPagination
+              currentPage={params.pageNumber}
+              pageCount={data.pageCount}
+              pageChanged={setPageNumber}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 };

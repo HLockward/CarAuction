@@ -19,6 +19,7 @@ const FilterBy = ({ buttons, value, setParams, label }: Props) => {
             onClick={() => setParams(button.value)}
             color={`${value === button.value ? "red" : "gray"}`}
             size="sm"
+            className="focus:ring-0"
           >
             <button.icon className="mr-3 h-4 w-4" />
             {button.label}
