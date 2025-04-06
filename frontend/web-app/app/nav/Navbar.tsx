@@ -1,3 +1,4 @@
+import LoginButton from "./LoginButton";
 import Logo from "./Logo";
 import Search from "./Search";
 
@@ -9,7 +10,7 @@ function Navbar() {
     >
       <Logo />
       <Search />
-      <div>login</div>
+      <LoginButton />
     </header>
   );
 }
