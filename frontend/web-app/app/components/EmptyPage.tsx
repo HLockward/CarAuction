@@ -1,17 +1,21 @@
+"use client";
 import { useParamsStore } from "@/hooks/useParamsStore";
 import { Button } from "flowbite-react";
 import Heading from "./Heading";
+import LoginButton from "./LoginButton";
 
 type Props = {
   title?: string;
   subtitle?: string;
-  showReset?: boolean;
+  type: "reset" | "login";
+  callbackURl?: string;
 };
 
-const EmptyFilter = ({
+const EmptyPage = ({
   title = "No matches for this filter",
   subtitle = "Try changing or resetting the filters",
-  showReset,
+  type,
+  callbackURl,
 }: Props) => {
   const reset = useParamsStore((state) => state.reset);
 
@@ -19,14 +23,17 @@ const EmptyFilter = ({
     <div className="h-[40vh] flex flex-col gap-2 justify-center items-center shadow-lg">
       <Heading title={title} subtitle={subtitle} center />
       <div className="mt-4">
-        {showReset && (
+        {type === "reset" && (
           <Button outline onClick={reset}>
             Remove Filters
           </Button>
+        )}
+        {type === "login" && (
+          <LoginButton redirectTo={callbackURl} promptTo="" />
         )}
       </div>
     </div>
   );
 };
 
-export default EmptyFilter;
+export default EmptyPage;

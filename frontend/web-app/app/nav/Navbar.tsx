@@ -1,5 +1,5 @@
 import { getCurrentUser } from "../actions/authActions";
-import LoginButton from "./LoginButton";
+import LoginButton from "../components/LoginButton";
 import Logo from "./Logo";
 import Search from "./Search";
 import UserActions from "./UserActions";

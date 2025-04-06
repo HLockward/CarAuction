@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { getData } from "../actions/auctionActions";
 import AppPagination from "../components/AppPagination";
-import EmptyFilter from "../components/EmptyFilter";
+import EmptyFilter from "../components/EmptyPage";
 import { Auction, PageResult } from "../types";
 import AuctionCard from "./AuctionCard";
 import Filters from "./Filters";
@@ -38,7 +38,7 @@ const Listing = () => {
     <>
       <Filters />
       {data.totalCount === 0 ? (
-        <EmptyFilter showReset />
+        <EmptyFilter type="reset" />
       ) : (
         <>
           <div className="grid grid-cols-4 gap-6">
