@@ -1,3 +1,9 @@
 @import "tailwindcss";
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
+
+@import 'react-datepicker/dist/react-datepicker.css';
+
+.react-datepicker-wrapper {
+    width: 100%;
+}
