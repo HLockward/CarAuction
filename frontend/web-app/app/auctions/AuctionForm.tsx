@@ -1,17 +1,20 @@
 "use client";
 
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import { createAuction } from "../actions/auctionActions";
 import DateInput from "../components/DateInput";
 import Input from "../components/Input";
+import { useRouter } from "next/navigation";
 
 const AuctionForm = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
     setFocus,
-    formState: { isSubmitting, isValid, isDirty, errors },
+    formState: { isSubmitting, isValid },
   } = useForm({
     mode: "onTouched",
   });
@@ -21,7 +24,15 @@ const AuctionForm = () => {
   }, [setFocus]);
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
+    try {
+      const res = await createAuction(data);
+      if (res.error) {
+        throw res.error;
+      }
+      router.push("/auctions/details/" + res.id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -91,12 +102,20 @@ const AuctionForm = () => {
         <Button outline color="gray">
           Cancel
         </Button>
-        <Button
-          // disabled={!isValid}
-          outline
-          type="submit"
-        >
-          Submit
+        <Button disabled={!isValid} outline type="submit">
+          {isSubmitting ? (
+            <>
+              <Spinner
+                size="sm"
+                aria-label="Info spinner example"
+                className="me-3"
+                light
+              />
+              Loading...
+            </>
+          ) : (
+            "Submit"
+          )}
         </Button>
       </div>
     </form>
