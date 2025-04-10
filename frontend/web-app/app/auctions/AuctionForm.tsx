@@ -1,12 +1,13 @@
 "use client";
 
 import { Button, Spinner } from "flowbite-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { createAuction } from "../actions/auctionActions";
 import DateInput from "../components/DateInput";
 import Input from "../components/Input";
-import { useRouter } from "next/navigation";
 
 const AuctionForm = () => {
   const router = useRouter();
@@ -30,8 +31,8 @@ const AuctionForm = () => {
         throw res.error;
       }
       router.push("/auctions/details/" + res.id);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(`${error.status} ${error.message}`);
     }
   };
 
