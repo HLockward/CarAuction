@@ -19,6 +19,10 @@ export const updateAuction = async (data: FieldValues, id: string) => {
   return await fetchWrapper.put(`auctions/${id}`, data);
 };
 
+export const deleteAuction = async (id: string) => {
+  return await fetchWrapper.del(`auctions/${id}`);
+};
+
 export const updateAuctionTest = async () => {
   const data = { mileage: 1000 };
 
