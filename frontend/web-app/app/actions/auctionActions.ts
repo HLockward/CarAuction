@@ -15,6 +15,10 @@ export const getDetailedViewData = async (id: string): Promise<Auction> => {
   return await fetchWrapper.get(`auctions/${id}`);
 };
 
+export const updateAuction = async (data: FieldValues, id: string) => {
+  return await fetchWrapper.put(`auctions/${id}`, data);
+};
+
 export const updateAuctionTest = async () => {
   const data = { mileage: 1000 };
 
