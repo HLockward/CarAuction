@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Auction } from "../types";
+import { Auction } from "../../types";
 import CarImage from "./CarImage";
 import CountdownTimer from "./CountdownTimer";
 import CurrentBid from "./CurrentBid";

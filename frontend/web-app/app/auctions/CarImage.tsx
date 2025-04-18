@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Auction } from "../types";
+import { Auction } from "../../types";
 import { useState } from "react";
 
 const CarImage = (auction: Auction) => {

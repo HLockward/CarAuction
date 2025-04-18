@@ -1,5 +1,5 @@
 import { thousandsSeparatorFormat } from "@/app/lib/thousandsSeparatorFormat";
-import { Bid } from "@/app/types";
+import { Bid } from "@/types";
 import { format } from "date-fns";
 
 const BidItem = ({ bid }: { bid: Bid }) => {

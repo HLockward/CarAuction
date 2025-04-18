@@ -1,4 +1,4 @@
-import { Auction, PageResult } from "@/app/types";
+import { Auction, PageResult } from "@/types";
 import { create } from "zustand";
 
 type State = {

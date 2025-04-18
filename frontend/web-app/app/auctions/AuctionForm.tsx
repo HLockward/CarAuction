@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { createAuction, updateAuction } from "../actions/auctionActions";
 import DateInput from "../components/DateInput";
 import Input from "../components/Input";
-import { Auction } from "../types";
+import { Auction } from "../../types";
 
 const AuctionForm = ({ auction }: { auction?: Auction }) => {
   const router = useRouter();
