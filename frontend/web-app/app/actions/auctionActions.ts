@@ -27,6 +27,16 @@ export const getBidForAuction = async (id: string): Promise<Bid[]> => {
   return await fetchWrapper.get(`bids/${id}`);
 };
 
+export const placeBidForAuction = async (
+  auctionId: string,
+  amount: number
+): Promise<Bid> => {
+  return await fetchWrapper.post(
+    `bids?auctionId=${auctionId}&amount=${amount}`,
+    {}
+  );
+};
+
 export const updateAuctionTest = async () => {
   const data = { mileage: 1000 };
 
