@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./nav/Navbar";
+import SignalRProvider from "./providers/SignalRProvider";
 import ToasterProvider from "./providers/ToasterProvider";
 
 export const metadata: Metadata = {
@@ -18,7 +19,9 @@ export default function RootLayout({
       <body>
         <ToasterProvider />
         <Navbar />
-        <main className="container max-auto px-5 pt-10">{children}</main>
+        <main className="container max-auto px-5 pt-10">
+          <SignalRProvider>{children}</SignalRProvider>
+        </main>
       </body>
     </html>
   );
