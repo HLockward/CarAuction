@@ -1,20 +1,35 @@
 "use client";
 import { useAuctionStore } from "@/hooks/useAuctionStore";
 import { useBidStore } from "@/hooks/useBidStore";
-import { Bid } from "@/types";
+import { Auction, Bid } from "@/types";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { User } from "next-auth";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
+import AuctionCreatedToast from "../components/AuctionCreatedToast";
 
 type Props = {
   children: React.ReactNode;
+  user: User | null | undefined;
 };
 
-const SignalRProvider = ({ children }: Props) => {
+const SignalRProvider = ({ children, user }: Props) => {
   const connection = useRef<HubConnection | null>(null);
   const setCurrentPrice = useAuctionStore((state) => state.setCurrentPrice);
   const addBid = useBidStore((state) => state.addBid);
   const params = useParams<{ id: string }>();
+
+  const handleAuctionCreated = useCallback(
+    (auction: Auction) => {
+      if (auction.seller !== user?.username) {
+        return toast(<AuctionCreatedToast auction={auction} />, {
+          duration: 10000,
+        });
+      }
+    },
+    [user?.username]
+  );
 
   const handleBidPlaced = useCallback(
     (bid: Bid) => {
@@ -46,9 +61,11 @@ const SignalRProvider = ({ children }: Props) => {
         });
     }
     connection.current.on("BidPlaced", handleBidPlaced);
+    connection.current.on("AuctionCreated", handleAuctionCreated);
 
     return () => {
       connection.current?.off("BidPlaced", handleBidPlaced);
+      connection.current?.off("AuctionCreated", handleAuctionCreated);
     };
   }, [handleBidPlaced]);
   return children;
