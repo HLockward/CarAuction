@@ -1,13 +1,15 @@
 "use client";
 import { useAuctionStore } from "@/hooks/useAuctionStore";
 import { useBidStore } from "@/hooks/useBidStore";
-import { Auction, Bid } from "@/types";
+import { Auction, AuctionFinished, Bid } from "@/types";
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { User } from "next-auth";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
+import { getDetailedViewData } from "../actions/auctionActions";
 import AuctionCreatedToast from "../components/AuctionCreatedToast";
+import AuctionFinishedToast from "../components/AuctionFinishedToast";
 
 type Props = {
   children: React.ReactNode;
@@ -19,6 +21,32 @@ const SignalRProvider = ({ children, user }: Props) => {
   const setCurrentPrice = useAuctionStore((state) => state.setCurrentPrice);
   const addBid = useBidStore((state) => state.addBid);
   const params = useParams<{ id: string }>();
+
+  const handleAuctionFinished = useCallback(
+    (auctionFinished: AuctionFinished) => {
+      const auction = getDetailedViewData(auctionFinished.auctionId);
+      return toast.promise(
+        auction,
+        {
+          loading: "Loading",
+          success: (auction) => (
+            <AuctionFinishedToast
+              auction={auction}
+              finishedAuction={auctionFinished}
+            />
+          ),
+          error: (err) => "Auction finished",
+        },
+        {
+          success: {
+            duration: 10000,
+            icon: null,
+          },
+        }
+      );
+    },
+    []
+  );
 
   const handleAuctionCreated = useCallback(
     (auction: Auction) => {
@@ -62,12 +90,14 @@ const SignalRProvider = ({ children, user }: Props) => {
     }
     connection.current.on("BidPlaced", handleBidPlaced);
     connection.current.on("AuctionCreated", handleAuctionCreated);
+    connection.current.on("AuctionFinished", handleAuctionFinished);
 
     return () => {
       connection.current?.off("BidPlaced", handleBidPlaced);
       connection.current?.off("AuctionCreated", handleAuctionCreated);
+      connection.current?.off("AuctionFinished", handleAuctionFinished);
     };
-  }, [handleBidPlaced]);
+  }, [handleBidPlaced, handleAuctionCreated, handleAuctionFinished]);
   return children;
 };
 
