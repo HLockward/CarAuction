@@ -22,6 +22,14 @@ const BidForm = ({ auctionId, highBid }: Props) => {
   const addBid = useBidStore((state) => state.addBid);
 
   const onSubmit = async (data: FieldValues) => {
+    if (data.amount <= highBid) {
+      reset();
+      return toast.error(
+        `Bid must be higher than the current high bid of $${thousandsSeparatorFormat(
+          highBid + 1
+        )}`
+      );
+    }
     placeBidForAuction(auctionId, +data.amount)
       .then((bid: any) => {
         if (bid.error) throw bid.error;
