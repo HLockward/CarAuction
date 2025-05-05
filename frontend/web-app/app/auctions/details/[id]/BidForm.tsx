@@ -1,8 +1,10 @@
 "use client";
 
 import { placeBidForAuction } from "@/app/actions/auctionActions";
+import { isHttpError } from "@/app/lib/httpErrorHelpers";
 import { thousandsSeparatorFormat } from "@/app/lib/thousandsSeparatorFormat";
 import { useBidStore } from "@/hooks/useBidStore";
+import { Bid } from "@/types";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -12,12 +14,7 @@ type Props = {
 };
 
 const BidForm = ({ auctionId, highBid }: Props) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const addBid = useBidStore((state) => state.addBid);
 
@@ -31,10 +28,12 @@ const BidForm = ({ auctionId, highBid }: Props) => {
       );
     }
     placeBidForAuction(auctionId, +data.amount)
-      .then((bid: any) => {
-        if (bid.error) throw bid.error;
+      .then((bid: unknown) => {
+        if (isHttpError(bid)) {
+          throw bid;
+        }
 
-        addBid(bid);
+        addBid(bid as Bid);
         reset();
       })
       .catch((err) => {

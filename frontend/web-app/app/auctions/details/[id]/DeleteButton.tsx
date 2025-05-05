@@ -1,6 +1,7 @@
 "use client";
 
 import { deleteAuction } from "@/app/actions/auctionActions";
+import { isHttpError } from "@/app/lib/httpErrorHelpers";
 import { Button, Spinner } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,8 +19,8 @@ const DeleteButton = ({ id }: { id: string }) => {
         }
         router.push("/");
       })
-      .catch((error: any) => {
-        toast(`${error.status} ${error.message}`);
+      .catch((error: unknown) => {
+        if (isHttpError(error)) toast(`${error.status} ${error.message}`);
       })
       .finally(() => setIsLoading(false));
   };

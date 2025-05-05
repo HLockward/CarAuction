@@ -3,6 +3,7 @@
 import { getBidForAuction } from "@/app/actions/auctionActions";
 import EmptyPage from "@/app/components/EmptyPage";
 import Heading from "@/app/components/Heading";
+import { isHttpError } from "@/app/lib/httpErrorHelpers";
 import { thousandsSeparatorFormat } from "@/app/lib/thousandsSeparatorFormat";
 import { useBidStore } from "@/hooks/useBidStore";
 import { Auction, Bid } from "@/types";
@@ -37,9 +38,9 @@ const BidList = ({ user, auction }: Props) => {
 
   useEffect(() => {
     getBidForAuction(auction.id)
-      .then((res: any) => {
-        if (res.error) {
-          throw res.error;
+      .then((res: unknown) => {
+        if (isHttpError(res)) {
+          throw res;
         }
         setBids(res as Bid[]);
       })

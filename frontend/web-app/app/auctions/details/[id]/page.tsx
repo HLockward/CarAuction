@@ -8,7 +8,7 @@ import DeleteButton from "./DeleteButton";
 import DetailedSpecs from "./DetailedSpecs";
 import EditButton from "./EditButton";
 
-const Details = async ({ params }: { params: { id: string } }) => {
+const Details = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const auction = await getDetailedViewData(id);
   const user = await getCurrentUser();

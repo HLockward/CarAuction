@@ -5,7 +5,7 @@ import { updateAuctionTest } from "../actions/auctionActions";
 
 const AuthTest = () => {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>();
+  const [result, setResult] = useState();
 
   const doUpdate = () => {
     setResult(undefined);
@@ -20,7 +20,11 @@ const AuthTest = () => {
       <Button outline onClick={doUpdate}>
         Test auth
       </Button>
-      <div>{JSON.stringify(result, null, 2)}</div>
+      {loading ? (
+        <span className="text-sm text-gray-500">Loading...</span>
+      ) : (
+        <div>{JSON.stringify(result, null, 2)}</div>
+      )}
     </div>
   );
 };

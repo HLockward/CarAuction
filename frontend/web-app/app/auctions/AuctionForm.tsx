@@ -5,10 +5,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { Auction } from "../../types";
 import { createAuction, updateAuction } from "../actions/auctionActions";
 import DateInput from "../components/DateInput";
 import Input from "../components/Input";
-import { Auction } from "../../types";
+import { isHttpError } from "../lib/httpErrorHelpers";
 
 const AuctionForm = ({ auction }: { auction?: Auction }) => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const AuctionForm = ({ auction }: { auction?: Auction }) => {
       });
     }
     setFocus("make");
-  }, [setFocus]);
+  }, [setFocus, reset, auction]);
 
   const onSubmit = async (data: FieldValues) => {
     try {
@@ -55,8 +56,10 @@ const AuctionForm = ({ auction }: { auction?: Auction }) => {
         throw res.error;
       }
       router.push("/auctions/details/" + id);
-    } catch (error: any) {
-      toast.error(`${error.status} ${error.message}`);
+    } catch (error: unknown) {
+      if (isHttpError(error)) {
+        toast.error(`${error.status} ${error.message}`);
+      }
     }
   };
 

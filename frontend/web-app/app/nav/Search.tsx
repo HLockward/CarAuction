@@ -10,7 +10,8 @@ const Search = () => {
   const value = useParamsStore((state) => state.searchValue);
   const setValue = useParamsStore((state) => state.setSearchValue);
 
-  const onChange = (event: any) => setValue(event.target.value);
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setValue(event.target.value);
   const search = () => {
     if (pathname !== "/") router.push("/");
     setParams({ searchTerm: value });
@@ -18,7 +19,7 @@ const Search = () => {
   return (
     <div className="flex w-[50%] items-center border-2 rounded-full py-2 shadow-sm">
       <input
-        onKeyDown={(e: any) => {
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === "Enter") search();
         }}
         value={value}

@@ -6,7 +6,5 @@ export const getCurrentUser = async () => {
     if (!session) return null;
 
     return session.user;
-  } catch (e) {
-    null;
-  }
+  } catch {}
 };

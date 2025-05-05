@@ -8,14 +8,14 @@ type Props = {
   title?: string;
   subtitle?: string;
   type: "reset" | "login";
-  callbackURl?: string;
+  callbackUrl?: string;
 };
 
 const EmptyPage = ({
   title = "No matches for this filter",
   subtitle = "Try changing or resetting the filters",
   type,
-  callbackURl,
+  callbackUrl,
 }: Props) => {
   const reset = useParamsStore((state) => state.reset);
 
@@ -29,7 +29,7 @@ const EmptyPage = ({
           </Button>
         )}
         {type === "login" && (
-          <LoginButton redirectTo={callbackURl} promptTo="" />
+          <LoginButton redirectTo={callbackUrl} promptTo="" />
         )}
       </div>
     </div>

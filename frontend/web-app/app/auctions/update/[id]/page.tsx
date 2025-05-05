@@ -2,7 +2,7 @@ import { getDetailedViewData } from "@/app/actions/auctionActions";
 import Heading from "@/app/components/Heading";
 import AuctionForm from "../../AuctionForm";
 
-const Update = async ({ params }: { params: { id: string } }) => {
+const Update = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const auction = await getDetailedViewData(id);
   return (
