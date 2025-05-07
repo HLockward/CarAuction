@@ -9,8 +9,14 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "cdn.pixabay.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "cdn.pixabay.com", pathname: "/**" },
+    ],
   },
+};
+
+module.exports = {
+  output: "standalone",
 };
 
 export default withFlowbiteReact(nextConfig);
