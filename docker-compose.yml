@@ -67,11 +67,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-      - IssuerUri=http://localhost:5000
-      - ClientApp=http://localhost:3000
+      - IssuerUri=http://id.carauction.local
+      - ClientApp=http://app.carauction.local
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=identity;Username=postgres;Password=postgrespw
-    ports:
-      - 5000:80
+      - VIRTUAL_HOST=id.carauction.local
     depends_on:
       - postgres
   gateway-svc:
@@ -82,8 +81,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-    ports:
-      - 6001:80
+      - ClientApp=http://app.carauction.local
+      - VIRTUAL_HOST=api.carauction.local
   bid-svc:
     image: hlockward/bid-svc:latest
     build: 
@@ -121,16 +120,23 @@ services:
       dockerfile: frontend/web-app/Dockerfile
     volumes:
       - /var/lib/web/data:/app/data
-    ports:
-      - 3000:3000
     environment:
       - AUTH_SECRET=j+CHdYP1gHK8Ukb3qMz+NjdLtN+g8+rUARp60dtoFsI=
-      - AUTH_URL=http://localhost:3000
+      - AUTH_URL=http://app.carauction.local
       - AUTH_URL_INTERNAL=http://web-app:3000
       - API_URL=http://gateway-svc/
-      - ID_URL=http://localhost:5000
+      - ID_URL=http://id.carauction.local
       - ID_URL_INTERNAL=http://identity-svc
-      - NOTIFY_URL=http://localhost:6001/notifications           
+      - NOTIFY_URL=http://api.carauction.local/notifications
+      - VIRTUAL_HOST=app.carauction.local
+      - VIRTUAL_PORT=3000
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro               
 volumes:
   pgdata:
   mongodata:
